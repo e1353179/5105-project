@@ -7,14 +7,14 @@ import time
 import json
 import os
 
-# ========== 配置 ==========
-pdf_path = "../input/your_pdf.pdf"  # ← 记得设置你的 PDF 路径
+# Setting
+pdf_path = "../input/your_pdf.pdf"  
 excel_path = "../ESG评价体系0322.xlsx"
 output_path = "词频统计_含近义词.csv"
-openai.api_key = "YOUR_API_KEY"  # ← 记得设置你的 OpenAI API 密钥
+openai.api_key = "YOUR_API_KEY"  
 model = "gpt-4"
 
-# ========== 1. 加载定性关键词 ==========
+# ========== 1. Loading Qualitative Keywords ==========
 def load_keywords_with_synonyms(excel_path):
     xls = pd.ExcelFile(excel_path)
     records = []
@@ -32,7 +32,7 @@ def load_keywords_with_synonyms(excel_path):
                         records.append({"keyword": kw.strip(), "type": row[col], "domain": sheet})
     return pd.DataFrame(records)
 
-# ========== 2. 提取全文文本 ==========
+# ========== 2. Extract full text ==========
 def extract_pdf_text(pdf_path):
     all_text = []
     with pdfplumber.open(pdf_path) as pdf:
@@ -42,7 +42,7 @@ def extract_pdf_text(pdf_path):
                 all_text.append(text)
     return "\n".join(all_text)
 
-# ========== 3. 生成近义词扩展 ==========
+# ========== 3. Generate near-synonym extensions ==========
 def get_synonyms_batch(keywords):
     prompt = f"""
 Please provide 3 to 5 common synonyms or semantically similar expressions for each of the following ESG-related keywords. 
@@ -69,7 +69,7 @@ Keywords:
         print("❌ GPT 错误：", e)
         return "[]"
 
-# ========== 4. 主流程 ==========
+# ========== 4. mainstream process ==========
 def run():
     print("📘 读取关键词...")
     df_keywords = load_keywords_with_synonyms(excel_path)
